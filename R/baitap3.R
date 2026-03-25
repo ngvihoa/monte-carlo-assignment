@@ -1,6 +1,6 @@
 # setup các thông tin chung
 set.seed(234)
-n_sample <- 10000 ## 1_000
+n_sample <- 10000 ## 100 vs 10,000
 ## Hàm h(.) mục tiêu
 h_target <- function(x){
   exp(-abs(x)^3 / 3)
@@ -31,7 +31,7 @@ sigma_hat <- top / bottom
 cat("Xấp xỉ sigma^2 theo Rienmann = ", sigma_hat)
 
 # CÂU 3C:
-result_compare <- sapply(1:100, function(i, n_sample){
+result_compare <- sapply(1:10000, function(i, n_sample){
   set.seed(i+345)
   
   x <- rnorm(n_sample, mean = 0, sd = 1)
