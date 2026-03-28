@@ -1,6 +1,6 @@
 # setup các thông tin chung
 set.seed(234)
-n_sample <- 10000 ## 100 vs 10,000
+n_sample <- 1000
 ## Hàm h(.) mục tiêu
 h_target <- function(x){
   exp(-abs(x)^3 / 3)
@@ -59,9 +59,9 @@ cat("Giá trị thật sigma^2 = ", sigma_true)
 
 ## So sánh mean giá trị sigma^2 giữa 2 phương pháp
 apply(result_compare, 1, mean)
+
 ## So sánh độ lệch chuẩn giữa 2 phương pháp
 apply(result_compare, 1, sd)
-
 
 
 ## Visualization
