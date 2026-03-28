@@ -80,3 +80,16 @@ boxplot(result_compare[1, ], result_compare[2, ],
         names = c("IS", "Riemann"),
         col = c("lightblue", "lightgreen"),
         main = "So sánh IS vs Riemann")
+
+### Vẽ đường estimator theo số lần mô phỏng
+curve(h_target(x), from = -3, to = 3, col = "red", lwd = 2,
+      main = "So sánh h_target và h đề xuất", ylab = "Giá trị")
+curve(h(x), from = -3, to = 3, col = "blue", lwd = 2, add = TRUE)
+legend("topright", legend = c("h_target", "h đề xuất"),
+       col = c("red", "blue"), lty = 1, lwd = 2)
+
+
+
+
+
+
