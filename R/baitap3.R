@@ -1,27 +1,29 @@
-# setup các thông tin chung
+# Setup thông tin chung
 set.seed(234)
-n_sample <- 1000
-## Hàm h(.) mục tiêu
-h_target <- function(x){
-  exp(-abs(x)^3 / 3)
-}
-## Tạo mẫu dữ liệu từ phân phối chuẩn N(0,1)
-x <- rnorm(n_sample, mean = 0, sd = 1)
+n_sample <- 1000   # Số mẫu cho mỗi lần ước lượng
+n_reps <- 1000     # Số lần lặp lại mô phỏng để tính phương sai
 
 # CÂU 3A:
-## Hàm mật độ h(.) đề xuất theo N(0, 1)
-h <- function(x){
-  dnorm(x, mean = 0, sd = 1)
-}
-##Trọng số h_target(.) / h(.)
-w = h_target(x) / h(x)
-## Xấp xỉ sigma^2
-sigma_hat <- sum(x^2 * w) / sum(w)
+## Hàm h(x) mục tiêu
+h_target <- function(x) { exp(-abs(x)^3 / 3) }
 
-cat("Xấp xỉ sigma^2 theo IS = ", sigma_hat)
+## Hàm thực hiện Importance Sampling + Guassian
+calc_is <- function() {
+  samp <- rnorm(n_sample, 0, 1)
+  h_prop <- dnorm(samp, 0, 1)
+  
+  w <- h_target(samp) / h_prop
+  return(sum(samp^2 * w) / sum(w))
+}
+
+## Ước lượng Monte Carlo
+est_gaussian  <- replicate(n_reps, calc_is())
+
+cat("Ước lượng theo Gaussian: ", mean(est_gaussian), "\n")
 
 # CÂU 3B:
 ## sắp xếp x
+x <- rnorm(n_sample, 0, 1)
 x_sorted <- sort(x)
 ## Sigma^2 theo công thức rienmann
 top <- sum(x_sorted[-n_sample]^2 * diff(x_sorted) * h_target(x_sorted[-n_sample]))
@@ -36,7 +38,7 @@ result_compare <- sapply(1:10000, function(i, n_sample){
   
   x <- rnorm(n_sample, mean = 0, sd = 1)
   ## Importance sampling
-  w <- h_target(x) / h(x)
+  w <- h_target(x) / dnorm(x, 0, 1)
   sigma2_is <- sum(x^2 * w) / sum(w)
   
   ## Rienmann
@@ -78,16 +80,3 @@ boxplot(result_compare[1, ], result_compare[2, ],
         names = c("IS", "Riemann"),
         col = c("lightblue", "lightgreen"),
         main = "So sánh IS vs Riemann")
-
-### Vẽ đường estimator theo số lần mô phỏng
-curve(h_target(x), from = -3, to = 3, col = "red", lwd = 2,
-      main = "So sánh h_target và h đề xuất", ylab = "Giá trị")
-curve(h(x), from = -3, to = 3, col = "blue", lwd = 2, add = TRUE)
-legend("topright", legend = c("h_target", "h đề xuất"),
-       col = c("red", "blue"), lty = 1, lwd = 2)
-
-
-
-
-
-
